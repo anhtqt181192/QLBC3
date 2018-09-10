@@ -1,0 +1,40 @@
+body {
+	background-image:url('../anhmuine/bienmuine.jpg');
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+    border: 0 none;
+	height:auto; overflow:scroll !important;
+   
+    padding: 0;
+}
+#menu {
+	width:85% !important;
+	margin-left:100px !important;
+	margin-right:100px !important;
+    top:30px;
+    margin:0 auto;
+    width:100%;
+	z-index:1;
+}
+#noidung {
+	background-color:#FFFFFF;
+	margin:150px 100px 100px 100px !important;
+}
+#footer {
+	width:85%;
+	margin-left:100px;
+	margin-right:100px !important;
+	height:100px;
+	margin-top:10px;
+	margin-bottom:0px !important;
+	text-align:center;
+}
+/**/
+#chicken_contentDiv{
+	background:#fff!important;
+	overflow:hidden!important;
+}
+#chicken_close{
+	right:34px!important;
+}
+/**/

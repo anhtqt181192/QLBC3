@@ -1,0 +1,117 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Authentication
+@model LoginViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Log in";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+
+    @* -------------- CSS ------------------- *@
+
+    <!-- Bootstrap core CSS -->
+    <link rel="icon" type="image/png" href="icons/32.png" />
+    <link type="text/css" rel="stylesheet" href="/css/Plugin/font-awesome-4.6.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/Plugin/bootstrap-4.0.0-alpha.4/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="/css/Plugin/style/AnimationBoder.css" />
+    <link rel="stylesheet" href="/css/Plugin/style/hover-min.css" />
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/css/jquery-ui.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+
+    @* -------------- END CSS --------------- *@
+
+    <style>
+        .login-layout {
+            width: 300px;
+            border: 1px solid #c56f6f;
+            box-shadow: 0px 0px 5px #ef9595;
+            margin-left: calc(50% - 150px);
+            margin-top: 60px;
+            border-radius: 2px;
+            background: linear-gradient(#fff 90%, #efefef);
+        }
+
+            .login-layout form {
+                padding: 15px;
+            }
+
+        .title-form {
+            display: block;
+            padding: 7px;
+            background: linear-gradient(#efefef, #fff);
+            color: #1f419b;
+        }
+
+        .form-check-label {
+            cursor: pointer;
+        }
+
+        .error-login {
+            color: #f34545;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="mini-layout">
+        <div class="login-layout align-content-center">
+            <div class="title-form">
+                <h4 class="text-center" style="text-align: center;">ĐĂNG NHẬP HỆ THỐNG</h4>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label for="UserName">Tên đăng nhập</label>
+                            @Html.TextBoxFor(c => c.UserName, new { @class = "form-control", @placeholder = "Tên đăng nhập" })
+                        </div>
+                        <div class="form-group">
+                            <label for="Password">Mật khẩu</label>
+                            @Html.TextBoxFor(c => c.Password, new { @class = "form-control", @placeholder = "Mật khẩu", @type = "Password" })
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    @Html.CheckBoxFor(c => c.RememberMe, new { @class = "form-check-input" })
+                                    Ghi nhớ đăng nhập
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group  float-right">
+                            <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    @* -------------- Javascript --------------- *@
+
+    <script src="~/App_Themes/Plugin/Jquery/jquery-1.10.2.min.js"></script>
+    <script src="~/App_Themes/Plugin/bootstrap-4.1.0/js/bootstrap.min.js"></script>
+    <script src="~/App_Themes/Plugin/KendoUI/js/kendo.all.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".login-layout").css("margin-left", (window.innerWidth - 500) / 2)
+        })
+    </script>
+
+    @* -------------- End Javascript --------------- *@
+
+</body>
+</html>

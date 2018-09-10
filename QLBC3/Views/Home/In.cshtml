@@ -1,0 +1,127 @@
+﻿@model QLBC3.App_Data.Database.Invoice
+@{
+    ViewData["Title"] = "In";
+}
+
+@section css {
+    <style>
+        form {
+            margin: 15px;
+            padding: 15px;
+            border: 1px solid #45aee0;
+            border-radius: 3px;
+        }
+
+        .btn-addon-custom {
+            border: 1px solid #a9a9a9;
+            border-radius: 2px;
+            height: 27px;
+            line-height: 0px;
+            padding: 5px 10px;
+        }
+
+        form select {
+            max-width: 70%;
+            border-color: #a9a9a9 !important;
+            float: left;
+            padding: 0px 5px !important;
+        }
+
+        form input, form textarea {
+            border-color: #a9a9a9 !important;
+        }
+    </style>
+}
+
+<div class="container">
+    <form method="post" id="main">
+        <h3>Nhập chó</h3>
+        <div class="row">
+            <div class="col-md-6">
+                @Html.HiddenFor(c => c.NameCategorize)
+                @Html.HiddenFor(c => c.IdCategorize)
+                @Html.HiddenFor(c => c.IdCustomer)
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right"> Giống chó</label>
+                    <div class="col-sm-8">
+                        <select id="selectCategorize" class="form-control form-control-sm">
+                            @foreach (var item in ViewBag.categorizes)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                        <button type="button" class="btn btn-addon-custom" data-toggle="modal" data-target="#Modal1"><i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">Số lượng</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(c => c.SoLuong, new { @type = "number", @min = "1", @max = "100", @class = "form-control form-control-sm" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">Tổng tiền</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(c => c.TongTien, new { @type = "number", @class = "form-control form-control-sm format-money" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">Chi phí phát sinh</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(c => c.PhatSinh, new { @type = "number", @class = "form-control form-control-sm format-money" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">Ghi chú</label>
+                    <div class="col-sm-8">
+                        @Html.TextAreaFor(c => c.Note, new { @class = "form-control form-control-sm" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">&nbsp;</label>
+                    <div class="col-sm-8">
+                        <button type="button" class="btn btn-primary btn-sm" onclick="mainSubmit()">Thêm</button>
+                        <a href="/" class="btn btn-danger btn-sm">Hủy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6"></div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="Modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-body">
+                <form method="post" action="/Home/AddCategorize">
+                    <h5 class="modal-title" id="exampleModalLabel">Thêm loại chó</h5>
+                    <div class="form-group">
+                        <label>Tên loại chó</label>
+                        <input type="text" class="form-control" placeholder="tên loại chó" id="name" name="name">
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Thêm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(".tab-2").addClass("active");
+        $(".format-money").on("input", function () {
+            console.log($(this).val())
+        })
+        function mainSubmit() {
+            $("#NameCategorize").val($("#selectCategorize > option:selected").text());
+            $("#IdCategorize").val($("#selectCategorize > option:selected").val());
+            $("#main").submit()
+        }
+    </script>
+}

@@ -1,0 +1,153 @@
+﻿@{
+    Layout = "_Layout";
+}
+@section css{
+    <style>
+
+        #setting-print {
+            display: block;
+            position: absolute;
+            z-index: 9999;
+            width: 200px;
+            background: #fff;
+            border: 1px solid #adadad;
+            padding: 15px;
+            right: -200px;
+            top: 0px;
+            box-sizing: border-box;
+            border-radius: 2px;
+        }
+
+            #setting-print > .icon-setting {
+                width: 27px;
+                height: 27px;
+                text-align: center;
+                line-height: 25px;
+                border: 1px solid #adadad;
+                position: absolute;
+                left: -27px;
+                top: -1px;
+                background: #658398;
+                border-radius: 2px 0px 0px 2px;
+                color: #eceeef;
+                cursor: pointer;
+            }
+
+        #ddlDieuLuat {
+            display: block;
+            float: left;
+            height: 22px;
+            width: 45%;
+        }
+
+        #dl_bosung {
+            display: block;
+            float: right;
+            width: 45%;
+        }
+
+            #dl_bosung[disabled] {
+                display: none;
+            }
+
+        .index-tab > .header {
+            padding: 10px 0px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            font-size: 20px;
+            font-weight: 500;
+        }
+    </style>
+}
+<div class="card-block active tab-hide" id="active-tab1" style="height: 100%; position: fixed; width: 100%;">
+    <div class="container-fuild">
+        <div class="mini-layout scroll-page" style="overflow: auto; padding-right: 16px;">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mini-layout index-tab" style="padding: 20px;">
+                        <div class="header">
+                            Tồn kho
+                        </div>
+                        <table class="table custom-table table-bordered" id="table-hk07">
+                            <thead class="thead-default">
+                                <tr>
+                                    <th style="text-align: center; vertical-align: middle; padding: 10px 0px">TT</th>
+                                    <th style="text-align: center; vertical-align: middle; padding: 10px 0px">Chủng loại</th>
+                                    <th style="text-align: center; vertical-align: middle; padding: 10px 0px">Số lượng còn</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int i = 0;}
+                                @foreach (var item in ViewBag.wareHouse)
+                                {
+                                    i++;
+                                    <tr>
+                                        <td style="text-align: center; vertical-align: middle">@i</td>
+                                        <td style="text-align: center; vertical-align: middle">@item.NameCategorize</td>
+                                        <td style="text-align: center; vertical-align: middle">@item.Unit con</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="mini-layout index-tab" style="padding: 20px;">
+                        <div class="header">
+                            Thống kê chi tiết
+                        </div>
+                        <div class="mini-layout" style="padding: 10px">
+                            <p> Tính từ đầu tháng đến hiện tại </p>
+                            <table class="table table-sm">
+                                <thead class="thead-default">
+                                    <tr>
+                                        <th style="text-align: center; vertical-align: middle; width: 15px;">&nbsp</th>
+                                        <th style="text-align: center; vertical-align: middle;">Chủng loại</th>
+                                        <th style="text-align: center; vertical-align: middle;">Số lượng nhập</th>
+                                        <th style="text-align: center; vertical-align: middle;">Ngày nhập</th>
+                                        <th style="text-align: right; vertical-align: middle; width: 200px;">Giá</th>
+                                        <th style="text-align: right; vertical-align: middle; width: 200px;">Phát sinh</th>
+                                        <th style="text-align: right; vertical-align: middle; width: 200px;">Ghi chú</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ int j = 0; decimal count = 0; decimal count2 = 0;}
+                                    @foreach (var item in ViewBag.Invoice)
+                                    {
+                                        j++;
+                                        count += item.TongTien;
+                                        count2 += item.PhatSinh;
+                                        <tr>
+                                            <td style="text-align: center; vertical-align: middle">@j</td>
+                                            <td style="text-align: center; vertical-align: middle">@item.NameCategorize</td>
+                                            <td style="text-align: center; vertical-align: middle">@item.SoLuong con</td>
+                                            <td style="text-align: center; vertical-align: middle;">@item.DateCreate.ToString("dd/MM/yyyy")</td>
+                                            <td style="text-align: right; vertical-align: middle">@item.TongTien.ToString("N0")</td>
+                                            <td style="text-align: right; vertical-align: middle">@item.PhatSinh.ToString("N0")</td>
+                                            <td style="text-align: right; vertical-align: middle">@item.Note</td>
+                                        </tr>
+                                    }
+                                    <tr style="background: #83daf5">
+                                        <td style="text-align: right;vertical-align: middle" colspan="4">Tổng tiền :</td>
+                                        <td style="text-align: right; vertical-align: middle">@count.ToString("N0")</td>
+                                        <td style="text-align: right; vertical-align: middle" colspan="1">@count2.ToString("N0")</td>
+                                        <td style="text-align: right; vertical-align: middle" colspan="1"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $(".tab-main").addClass("active");
+            $(".mini-layout.scroll-page").css("height", window.innerHeight - 107)
+        })
+    </script>
+}
