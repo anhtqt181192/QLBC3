@@ -22,6 +22,8 @@ namespace QLBC3.Data
 
         public DbSet<WareHouse> WareHouse { get; set; }
 
+        public DbSet<Capital> Capital { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
