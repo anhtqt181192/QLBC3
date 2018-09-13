@@ -17,6 +17,8 @@ namespace QLBC3.App_Data.Database
 
         public int Unit { get; set; }
 
+        public decimal Amount { get; set; }
+
         public DateTime DateUpdate { get; set; }
 
         public string Note { get; set; }

@@ -26,6 +26,8 @@ namespace QLBC3.Controllers
         {
             ViewBag.wareHouse = context.WareHouse.ToList();
             ViewBag.Invoice = context.Invoice.ToList();
+            ViewBag.Capital1 = context.Capital.Where(c => c.Id == 1).FirstOrDefault().Amount;
+            ViewBag.Capital2 = context.WareHouse.Select(c => c.Amount).Sum();
             return View();
         }
 
@@ -58,6 +60,7 @@ namespace QLBC3.Controllers
                     IdCategorize = invoiceModels.IdCategorize,
                     NameCategorize = invoiceModels.NameCategorize,
                     Unit = invoiceModels.SoLuong,
+                    Amount = invoiceModels.TongTien,
                     DateUpdate = DateTime.Now,
                     Note = invoiceModels.Note,
                 };
@@ -69,6 +72,7 @@ namespace QLBC3.Controllers
                 wareHouse.IdCategorize = invoiceModels.IdCategorize;
                 wareHouse.NameCategorize = invoiceModels.NameCategorize;
                 wareHouse.Unit = wareHouse.Unit + invoiceModels.SoLuong;
+                wareHouse.Amount = invoiceModels.TongTien + wareHouse.Amount;
                 wareHouse.DateUpdate = DateTime.Now;
                 wareHouse.Note = invoiceModels.Note;
                 context.WareHouse.Update(wareHouse);

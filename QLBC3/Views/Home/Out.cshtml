@@ -1,6 +1,6 @@
 ﻿@model QLBC3.App_Data.Database.Invoice
 @{
-    ViewData["Title"] = "Nhập hàng";
+    ViewData["Title"] = "Xuất hàng";
 }
 
 @section css {
@@ -115,13 +115,13 @@
 
 @section scripts{
     <script>
-        $(".tab-2").addClass("active");
+        $(".tab-3").addClass("active");
         $(".format-money").on("input", function () {
             var oldValue = $("#TongTien").val().replaceAll(",", "");
             var newValue = $(this).val().replaceAll(",", "");
             var newInput = parseInt($(this).val().replaceAll(",", "").replaceAll(oldValue, ""));
             var isDelete = false;
-            if (oldValue.length >= $(this).val().replaceAll(",", "").length) {
+            if (oldValue.length >= $(this).val().replaceAll(",", "").length) { 
                 newInput = parseInt(oldValue.replaceAll(",", "").replaceAll($(this).val().replaceAll(",", ""), ""));
                 isDelete = true;
             }
@@ -143,6 +143,7 @@
         function mainSubmit() {
             $("#NameCategorize").val($("#selectCategorize > option:selected").text());
             $("#IdCategorize").val($("#selectCategorize > option:selected").val());
+            $("#TongTien").val($("#txtTongTien").replaceAll(",", ""))
             $("#main").submit()
         }
 
