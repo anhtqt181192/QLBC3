@@ -24,6 +24,10 @@ namespace QLBC3.Data
 
         public DbSet<Capital> Capital { get; set; }
 
+        public DbSet<Trip> Trip { get; set; }
+
+        public DbSet<ProductInTrip> ProductInTrip { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

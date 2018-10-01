@@ -139,8 +139,8 @@
                                 <thead class="thead-default">
                                     <tr>
                                         <th style="text-align: center; vertical-align: middle; width: 15px;">&nbsp</th>
-                                        <th style="text-align: center; vertical-align: middle;">Chủng loại</th>
-                                        <th style="text-align: center; vertical-align: middle;">Số lượng nhập</th>
+                                        <th style="text-align: center; vertical-align: middle;">Tên chuyến</th>
+                                        <th style="text-align: center; vertical-align: middle;">Chi tiết nhập</th>
                                         <th style="text-align: center; vertical-align: middle;">Ngày nhập</th>
                                         <th style="text-align: right; vertical-align: middle; width: 200px;">Giá</th>
                                         <th style="text-align: right; vertical-align: middle; width: 200px;">Ghi chú</th>
@@ -148,16 +148,44 @@
                                 </thead>
                                 <tbody>
                                     @{ int j = 0; decimal count = 0; decimal count2 = 0;}
-                                    @foreach (var item in ViewBag.Invoice)
+                                    @foreach (var item in ViewBag.Trip)
                                     {
                                         j++;
-                                        count += item.TongTien;
+                                        count += item.TotalMoney;
                                         <tr>
                                             <td style="text-align: center; vertical-align: middle">@j</td>
-                                            <td style="text-align: center; vertical-align: middle">@item.NameCategorize</td>
-                                            <td style="text-align: center; vertical-align: middle">@item.SoLuong con</td>
+                                            <td style="text-align: center; vertical-align: middle">@item.NameTrip</td>
+                                            <td style="text-align: center; vertical-align: middle">
+                                                <div class="table-bordered tableProductIn" style="width: 100%;"  data-id="@item.Id">
+                                                    <div class="row">
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                Giống chó
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                Số lượng
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                Đơn giá
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                Tổng tiền
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                Ghi chú
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                #
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        
+                                                    </div>
+                                                </div>
+                                            </td>
                                             <td style="text-align: center; vertical-align: middle;">@item.DateCreate.ToString("dd/MM/yyyy")</td>
-                                            <td style="text-align: right; vertical-align: middle">@item.TongTien.ToString("N0")</td>
+                                            <td style="text-align: right; vertical-align: middle">@item.TotalMoney.ToString("N0")</td>
                                             <td style="text-align: right; vertical-align: middle"><button class="btn btn-danger btn-sm" onclick="removeInvoice(@item.Id)">xoa</button></td>
                                         </tr>
                                     }
@@ -222,6 +250,10 @@
         $(document).ready(function () {
             $(".tab-main").addClass("active");
             $(".mini-layout.scroll-page").css("height", window.innerHeight - 107)
+            $(".tableProductIn > tbody > tr").each(function () { 
+                var id = $(this).attr("data-id");
+                console.log(id)
+            })
         })
 
         function removeInvoice(id) {

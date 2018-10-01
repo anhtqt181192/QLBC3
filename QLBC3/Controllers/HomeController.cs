@@ -24,6 +24,9 @@ namespace QLBC3.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.Trip = context.Trip.ToList();
+
+            //OLD
             ViewBag.wareHouse = context.WareHouse.ToList();
             ViewBag.Invoice = context.Invoice.Where(c => c.TypeInvoice == 0).ToList();
             ViewBag.Invoice2 = context.Invoice.Where(c => c.TypeInvoice == 2).ToList();
@@ -41,6 +44,8 @@ namespace QLBC3.Controllers
             ViewBag.tienloi = tienloi.ToString("N0");
             return View();
         }
+
+        #region OLD
 
         [HttpGet]
         public IActionResult In()
@@ -236,6 +241,93 @@ namespace QLBC3.Controllers
             return RedirectToAction("In");
         }
 
+        #endregion
+
+        public IActionResult CreateTrip()
+        {
+            List<Categorize> categorizes = context.Categorize.ToList();
+            ViewBag.categorizes = categorizes;
+            ViewBag.TripName = "ngay " + DateTime.Now.ToString("dd/MM/yyyy");
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateTrip(string NameTrip, decimal TotalMoney, string Note)
+        {
+            Trip trip = new Trip();
+            trip.NameTrip = NameTrip;
+            trip.TotalMoney = TotalMoney;
+            trip.Note = Note;
+            trip.DateCreate = DateTime.Now;
+            try
+            {
+                int idTrip = context.Trip.AddAsync(trip).Id;
+                List<ProductInTrip> productInTrips = context.ProductInTrip.Where(c => c.IdTrip == 0).ToList();
+                foreach (var item in productInTrips)
+                {
+                    item.IdTrip = idTrip;
+                    context.ProductInTrip.Update(item);
+                }
+                context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                List<Categorize> categorizes = context.Categorize.ToList();
+                ViewBag.categorizes = categorizes;
+                ViewBag.TripName = "ngay " + DateTime.Now.ToString("dd/MM/yyyy");
+                return View();
+            }
+            return RedirectToAction("index");
+        }
+
+
+        [HttpPost]
+        public IActionResult AddProduct(int IdCategorize, string NameCategorize, int Unit, decimal Total, decimal UnitPrice)
+        {
+            ProductInTrip item = new ProductInTrip();
+            item.IdTrip = 0;
+            item.IdCategorize = IdCategorize;
+            item.NameCategorize = NameCategorize;
+            item.Unit = Unit;
+            item.TotalPrice = Total;
+            item.UnitPrice = UnitPrice;
+
+            context.ProductInTrip.Add(item);
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                return Json(false);
+            }
+
+            return Json(true);
+        }
+
+        [HttpPost]
+        public IActionResult GetAllProductFree()
+        {
+            return Json(context.ProductInTrip.Where(c => c.IdTrip == 0).ToList());
+        }
+
+        [HttpPost]
+        public IActionResult RemoveProduct(int id)
+        {
+            try
+            {
+                ProductInTrip item = context.ProductInTrip.Find(id);
+                context.ProductInTrip.Remove(item);
+                context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                return Json(false);
+            }
+
+            return Json(true);
+        }
+        
 
         public IActionResult Report()
         {

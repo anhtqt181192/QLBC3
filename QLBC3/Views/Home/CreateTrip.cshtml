@@ -1,0 +1,309 @@
+﻿@model QLBC3.App_Data.Database.Trip
+@{
+    ViewData["Title"] = "CreateTrip";
+}
+
+@section css {
+    <style>
+        form {
+            margin: 15px;
+            padding: 15px;
+            border: 1px solid #45aee0;
+            border-radius: 3px;
+        }
+
+        .btn-addon-custom {
+            border: 1px solid #a9a9a9;
+            border-radius: 2px;
+            height: 27px;
+            line-height: 0px;
+            padding: 5px 10px;
+        }
+
+        form select {
+            max-width: 70%;
+            border-color: #a9a9a9 !important;
+            float: left;
+            padding: 0px 5px !important;
+        }
+
+        form input, form textarea {
+            border-color: #a9a9a9 !important;
+        }
+
+        #tableProduct thead tr th {
+            text-align: center;
+            padding: 3px 10px;
+        }
+
+        #tableProduct tbody tr td {
+            padding: 3px 10px;
+        }
+    </style>
+}
+
+<div class="container">
+    <form method="post" id="main">
+        @Html.HiddenFor(c => c.TotalMoney)
+        <h3>Tạo chuyến hàng</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">Tên chuyến</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(c => c.NameTrip, new { @class = "form-control form-control-sm" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">Tổng tiền</label>
+                    <div class="col-sm-8">
+                        <input disabled="disabled" class="form-control form-control-sm format-money" id="txtTongTien" type="text" value="" data-old="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">Ghi chú</label>
+                    <div class="col-sm-8">
+                        @Html.TextAreaFor(c => c.Note, new { @class = "form-control form-control-sm" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">&nbsp;</label>
+                    <div class="col-sm-8">
+                        <button type="button" class="btn btn-addon-custom" data-toggle="modal" data-target="#Modal2">Thêm hàng</button>
+                    </div>
+                </div>
+                <div class="form-group row" style="padding: 0px 20px;">
+                    <table id="tableProduct" class="table-bordered" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Giống chó
+                                </th>
+                                <th>
+                                    Số lượng
+                                </th>
+                                <th>
+                                    Đơn giá
+                                </th>
+                                <th>
+                                    Tổng tiền
+                                </th>
+                                <th>
+                                    Ghi chú
+                                </th>
+                                <th>
+                                    #
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">&nbsp;</label>
+                    <div class="col-sm-8">
+                        <button type="button" class="btn btn-primary btn-sm" onclick="mainSubmit()">Thêm</button>
+                        <a href="/" class="btn btn-danger btn-sm">Hủy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="Modal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-body">
+                <h3>Thêm hàng</h3>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right"> Giống chó</label>
+                    <div class="col-sm-8">
+                        <select id="selectCategorize" class="form-control form-control-sm" style="width: 100px; display: block; float: left;">
+                            @foreach (var item in ViewBag.categorizes)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                        <button type="button" class="btn btn-addon-custom" data-toggle="modal" data-target="#Modal1"><i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">Số lượng</label>
+                    <div class="col-sm-8">
+                        <input class="form-control form-control-sm" id="txtUnit" type="number" min="1" value="" onchange="changeUnitPrice();">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">Tổng tiền</label>
+                    <div class="col-sm-8">
+                        <input class="form-control form-control-sm format-money" id="txtTotal" type="text" value="" data-old=""  onchange="changeUnitPrice();">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">Đơn giá</label>
+                    <div class="col-sm-8">
+                        <input disabled="disabled" class="form-control form-control-sm format-money" id="txtUnitPrice" type="text" value="" data-old="" >
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label text-right">Ghi chú</label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control form-control-sm" id="txtNote" type="text"></textarea>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm closeModal2" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="AddProductInTrip()">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="Modal1" tabindex="0" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-body">
+                <form method="post" action="/Home/AddCategorize">
+                    <h5 class="modal-title" id="exampleModalLabel">Thêm loại chó</h5>
+                    <div class="form-group">
+                        <label>Tên loại chó</label>
+                        <input type="text" class="form-control" placeholder="tên loại chó" id="name" name="name">
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Thêm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script>
+
+        $(".tab-2").addClass("active");
+
+        $("#NameTrip").val("@ViewBag.TripName")
+
+        refreshTableProduct();
+
+        function AddProductInTrip() {
+            var d = {
+                IdCategorize: $("#selectCategorize > option:selected").val(),
+                NameCategorize: $("#selectCategorize > option:selected").text(),
+                Unit: $("#txtUnit").val(),
+                Total: $("#txtTotal").val(),
+                UnitPrice: $("#txtUnitPrice").val(),
+            }
+
+            PageMethod.getAjax("POST", "/Home/AddProduct", d, "JSON", function (respone) {
+                console.log(respone);
+                if (respone) {
+                    $(".closeModal2").trigger("click");
+                    refreshTableProduct();
+                }
+            })
+        }
+
+        function changeUnitPrice() { 
+            var total = $("#txtTotal").val().replaceAll(",", "");
+            var unit = $("#txtUnit").val().replaceAll(",", "");
+            $("#txtUnitPrice").val(formatMoney(total / unit));
+        }
+
+        $(".format-money").on("input", function () {
+            var oldValue = $(this).attr("data-old").replaceAll(",", "");
+            var newValue = $(this).val().replaceAll(",", "");
+            var newInput = parseInt($(this).val().replaceAll(",", "").replace(oldValue, ""));
+            var isDelete = false;
+            if (oldValue.length >= $(this).val().replaceAll(",", "").length) {
+                newInput = parseInt(oldValue.replaceAll(",", "").replaceAll($(this).val().replaceAll(",", ""), ""));
+                isDelete = true;
+            }
+            if (isDelete) {
+                $(this).val(formatMoney(newValue))
+                $(this).attr("data-old", newValue)
+            }
+            else {
+                if (typeof (newInput) == "number" && !isNaN(newInput)) {
+                    $(this).val(formatMoney(oldValue + "" + newInput))
+                    $(this).attr("data-old", oldValue + "" + newInput)
+                }
+                else {
+                    $(this).val(formatMoney(oldValue))
+                    return;
+                }
+            }
+        })
+
+        function mainSubmit() {
+            $("#TotalMoney").val($("#txtTongTien").val().replaceAll(",", ""))
+            $("#main").submit()
+        }
+
+        function formatMoney(n, c, d, t) {
+            var c = isNaN(c = Math.abs(c)) ? 2 : c,
+                d = d == undefined ? "." : d,
+                t = t == undefined ? "," : t,
+                s = n < 0 ? "-" : "",
+                i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+                j = (j = i.length) > 3 ? j % 3 : 0;
+
+            return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t);
+        };
+
+
+        function refreshTableProduct() {
+            PageMethod.getAjax("POST", "/Home/GetAllProductFree", {}, "JSON", function (data) {
+                var total = 0;
+                var html = "";
+                for (var i = 0; i < data.length; i++) {
+                    total += parseInt(data[i].totalPrice)
+
+                    html += "<tr data-id='" + data[i].id + "'><td>" + data[i].nameCategorize + "</td>"
+                    html += "<td>" + data[i].unit + "</td>"
+                    html += "<td class='text-right'>" + formatMoney(parseInt(data[i].unitPrice)) + "</td>"
+                    html += "<td class='text-right'>" + formatMoney(parseInt(data[i].totalPrice)) + "</td>"
+                    html += "<td>" + formatNullValue(data[i].note) + "</td>"
+                    html += "<td><input type='button' class='btn btn-sm btn-danger' value='xoa' onclick='removeProduct(" + data[i].id + ")' /></td></tr>"
+                }
+                $("#tableProduct > tbody").html(html);
+                $("#txtTongTien").val(formatMoney(total))
+            })
+        }
+
+        function removeProduct(id) {
+            PageMethod.getAjax("POST", "/Home/RemoveProduct", {id: id}, "JSON", function (data) { refreshTableProduct() })
+         }
+
+        function formatNullValue(value) {
+            if (value == null || value == "null")
+                return "";
+            else return value;
+        }
+
+    </script>
+}
