@@ -67,13 +67,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-4 col-form-label text-right">Khách hàng</label>
-                    <div class="col-sm-8">
-                        <input class="form-control form-control-sm format-money" id="txtTongTien" type="text" value="">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-4 col-form-label text-right">Ghi chú</label>
+                    <label class="col-sm-4 col-form-label text-right">Nguồn hàng</label>
                     <div class="col-sm-8">
                         @Html.TextAreaFor(c => c.Note, new { @class = "form-control form-control-sm" })
                     </div>
@@ -119,7 +113,7 @@
         $(".format-money").on("input", function () {
             var oldValue = $("#TongTien").val().replaceAll(",", "");
             var newValue = $(this).val().replaceAll(",", "");
-            var newInput = parseInt($(this).val().replaceAll(",", "").replaceAll(oldValue, ""));
+            var newInput = parseInt($(this).val().replaceAll(",", "").replace(oldValue, ""));
             var isDelete = false;
             if (oldValue.length >= $(this).val().replaceAll(",", "").length) {
                 newInput = parseInt(oldValue.replaceAll(",", "").replaceAll($(this).val().replaceAll(",", ""), ""));
