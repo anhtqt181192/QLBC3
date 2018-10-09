@@ -28,6 +28,9 @@ namespace QLBC3.Data
 
         public DbSet<ProductInTrip> ProductInTrip { get; set; }
 
+        public DbSet<ExportProduct> ExportProduct { get; set; }
+        
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

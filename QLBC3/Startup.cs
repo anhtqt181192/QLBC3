@@ -59,7 +59,7 @@ namespace QLBC3
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseDeveloperExceptionPage();
             }
 
             app.UseStaticFiles();

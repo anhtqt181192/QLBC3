@@ -1,0 +1,232 @@
+﻿@model QLBC3.App_Data.Database.ExportProduct
+@{
+    ViewData["Title"] = "ExportProduct";
+}
+
+@section css {
+    <style>
+        .btn {
+            float: left;
+            margin: 5px;
+        }
+
+        div.form, form {
+            margin: 15px;
+            padding: 15px;
+            border: 1px solid #45aee0;
+            border-radius: 3px;
+        }
+        .tableProductIn > table > tbody > tr > td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .tableProductIn > table tr > th {
+            text-align: center;
+            font-weight: 500;
+        }
+    </style>
+
+}
+
+@if (!ViewBag.selectValue)
+{
+    <div class="container">
+        <div class="mini-layout form" style="padding: 10px">
+            <h3> Chọn chuyến hàng cần xuất </h3>
+            <table class="table table-sm">
+                <thead class="thead-default">
+                    <tr>
+                        <th style="text-align: center; vertical-align: middle; width: 15px;">&nbsp</th>
+                        <th style="text-align: center; vertical-align: middle;">Tên chuyến</th>
+                        <th style="text-align: center; vertical-align: middle;">Chi tiết nhập</th>
+                        <th style="text-align: center; vertical-align: middle; width: 100px;">Ngày nhập</th>
+                        <th style="text-align: right; vertical-align: middle; width: 100px;">Giá</th>
+                        <th style="text-align: right; vertical-align: middle; width: 180px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int j = 0; decimal count = 0; decimal count2 = 0;}
+                    @foreach (var item in ViewBag.Trip)
+                    {
+                        j++;
+                        count += item.TotalMoney;
+                        <tr>
+                            <td style="text-align: center; vertical-align: middle">@j</td>
+                            <td style="text-align: center; vertical-align: middle">@item.NameTrip</td>
+                            <td style="text-align: center; vertical-align: middle" class="tableProductIn" data-id="@item.Id"></td>
+                            <td style="text-align: center; vertical-align: middle;">@item.DateCreate.ToString("dd/MM/yyyy")</td>
+                            <td style="text-align: right; vertical-align: middle">@item.TotalMoney.ToString("N0")</td>
+                            <td style="text-align: right; vertical-align: middle;">
+                                <button class="btn btn-danger btn-sm" onclick="removeTrip(@item.Id)"><i class="fa fa-remove"></i> xóa</button>
+                                <a class="btn btn-success btn-sm" href="/Home/ExportProduct?id=@item.Id"><i class="fa fa-exchange"></i> xuất hàng</a>
+                            </td>
+                        </tr>
+                    }
+                    <tr style="background: #83daf5">
+                        <td style="text-align: right;vertical-align: middle" colspan="4">Tổng tiền :</td>
+                        <td style="text-align: right; vertical-align: middle">@count.ToString("N0")</td>
+                        <td style="text-align: right; vertical-align: middle" colspan="1"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container">
+        <form method="post" id="main">
+            @Html.HiddenFor(c => c.IdTrip)
+            @Html.HiddenFor(c => c.IdCategorize)
+            @Html.HiddenFor(c => c.NameCategorize)
+            @Html.HiddenFor(c => c.TotalPrice)
+            @Html.HiddenFor(c => c.IdProductInTrip)
+            <h3>Xuất hàng</h3>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mini-layout tableProductIn" data-id="@ViewBag.Id"></div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label class="col-sm-4 text-right"> Giống chó</label>
+                        <div class="col-sm-8">
+                            <select id="selectCategorize" class="form-control form-control-sm">
+                                @foreach (dynamic item in ViewBag.categorizes)
+                                {
+                                    <option value="@item.Id">@item.Name @item.Note</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 text-right">Số lượng</label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(c => c.Unit, new { @type = "number", @min = "1", @max = "100", @class = "form-control form-control-sm" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 text-right">Tổng tiền</label>
+                        <div class="col-sm-8">
+                            <input id="txtTotalMoney" class="form-control form-control-sm format-money" type="text" value="" data-old="">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 text-right">Khách hàng</label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(c => c.Note, new { @class = "form-control form-control-sm" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 text-right">&nbsp;</label>
+                        <div class="col-sm-8">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="mainSubmit()">Thêm</button>
+                            <a href="/" class="btn btn-danger btn-sm">Hủy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+}
+
+@section scripts{
+    <script>
+        var onsubmit = false;
+
+        $(document).ready(function () {
+            $(".format-money").attr("data-old", "");
+            $("#IdTrip").val("@ViewBag.TripId");
+            $(".tab-3").addClass("active");
+            $(".mini-layout.scroll-page").css("height", window.innerHeight - ($("nav.navbar").innerHeight() + 24))
+            $(".tableProductIn").each(function () {
+                var id = $(this).attr("data-id");
+                LoadDetailTrip(id, $(this));
+            });
+            unitChange();
+        })
+
+        function unitChange() { 
+            $("#Unit").on("change", function () {
+                var unit = $("#Unit").val();
+                var id = $("#selectCategorize > option:selected").val();
+                var t = $("tr[data-id=" + id + "]").find("td:nth-child(3)").text();
+                if (parseInt(unit) > parseInt(t)) {
+                    alert("Số lượng xuất vượt quá tồn kho");
+                    $(this).focus();
+                }
+                if (unit < 1) { 
+                    alert("Số lượng xuất phải lớn hơn 0");
+                    $(this).focus();
+                }
+            })
+        }
+
+        $(".format-money").on("input", function () {
+            var oldValue = $(this).attr("data-old").replaceAll(",", "");
+            var newValue = $(this).val().replaceAll(",", "");
+            var newInput = parseInt($(this).val().replaceAll(",", "").replace(oldValue, ""));
+            var isDelete = false;
+            if (oldValue.length >= $(this).val().replaceAll(",", "").length) {
+                newInput = parseInt(oldValue.replaceAll(",", "").replaceAll($(this).val().replaceAll(",", ""), ""));
+                isDelete = true;
+            }
+            if (isDelete) {
+                $(this).val(formatMoney(newValue))
+                $(this).attr("data-old", newValue)
+            }
+            else {
+                if (typeof (newInput) == "number" && !isNaN(newInput)) {
+                    $(this).val(formatMoney(oldValue + "" + newInput))
+                    $(this).attr("data-old", oldValue + "" + newInput)
+                }
+                else {
+                    $(this).val(formatMoney(oldValue))
+                    return;
+                }
+            }
+        })
+
+
+        function LoadDetailTrip(id, target) {
+            var d = {
+                id: id
+            }
+            PageMethod.getAjax("POST", "/DataServices/GetProductByIdTrip", d, "JSON", function (respone) {
+                if (respone.length < 1)
+                    return;
+                var html = "<table class='table table-sm table-bordered' style='margin: 5px 0px;'><tr><th>Giống chó</th><th>Số lượng</th>";
+                html += "<th>Hàng tồn</th><th>Đơn giá</th><th>Tổng tiền</th><th style='width: 40px;'>&nbsp;</th></tr>";
+                for (var i = 0; i < respone.length; i++) {
+                    html += '<tr data-id="' + respone[i].id + '"><td>' + respone[i].nameCategorize + '</td>';
+                    html += '<td>' + (parseInt(respone[i].totalPrice) / parseInt(respone[i].unitPrice)).toFixed(0) + '</td>';
+                    html += '<td>' + respone[i].unit + '</td>';
+                    html += '<td style="text-align: right;">' + formatMoney(respone[i].unitPrice) + '</td>';
+                    html += '<td style="text-align: right;">' + formatMoney(respone[i].totalPrice) + '</td>';
+                    html += "<td style='width: 40px;'><button class='btn btn-sm btn-danger' onclick='removeProduct(" + respone[i].id + ")' title='xóa'><i class='fa fa-remove' /></button></td></tr>";
+                }
+                html += '</table>';
+                target.append(html);
+            })
+        }
+
+        function formatMoney(n, c, d, t) {
+            var c = isNaN(c = Math.abs(c)) ? 2 : c,
+                d = d == undefined ? "." : d,
+                t = t == undefined ? "," : t,
+                s = n < 0 ? "-" : "",
+                i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+                j = (j = i.length) > 3 ? j % 3 : 0;
+
+            return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t);
+        };
+
+
+        function mainSubmit() {
+            $("#NameCategorize").val($("#selectCategorize > option:selected").text());
+            $("#IdProductInTrip").val($("#selectCategorize > option:selected").val());
+            $("#TotalPrice").val($("#txtTotalMoney").val())
+            $("#main").submit();
+        }
+    </script>
+}

@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewData["Title"] = "Report";
+}
+
+@section css {
+    <style>
+        .pd15 {
+            padding: 15px;
+        }
+
+        .nav-menu-expan {
+            display: inline-block;
+            width: 100%;
+        }
+
+        ul.ul-menu-expan {
+            display: inline-block;
+            width: 100%;
+            margin: 0px;
+            padding: 10px;
+        }
+
+        ul.ul-menu-expan > li {
+            display: block;
+            float: left;
+            list-style: none;
+        }
+
+        .form-group {
+            display: block;
+            float: left;
+            margin: 15px;
+        }
+
+            .form-group label {
+                float: left;
+                padding-right: 5px;
+            }
+
+            .form-group select, .form-group input {
+                float: left;
+                width: 100px;
+                padding: 3px 7px;
+            }
+    </style>
+}
+
+<div class="card-block active tab-hide" id="active-tab1" style="height: 100%; position: fixed; width: 100%;">
+    <div class="container-fuild">
+        <div class="form-group">
+            <label class="text-right"> Loại báo cáo</label>
+            <select id="selectCategorize" class="form-control form-control-sm" style="width: 220px">
+                <option value="1">Báo cáo lợi nhuận theo chuyến</option>
+                <option value="2">Báo cáo lợi nhuận tổng thể</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="text-right"> Chọn chuyến</label>
+            <select id="selectCategorize" class="form-control form-control-sm" style="width: 220px">
+                <option value="1">Chuyến ngày 09/10/2018</option>
+                <option value="2">Chuyến ngày 09/10/2018</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="text-right"> Từ ngày</label>
+            <input type="text" class="form-control input-sm form_datetime" placeholder="Từ ngày" id="fromtime">
+        </div>
+        <div class="form-group">
+            <label class="text-right"> Đến ngày</label>
+            <input type="text" class="form-control input-sm form_datetime" placeholder="Đến ngày" id="totime">
+        </div>
+        <div class="clearfix"></div>
+        <hr />
+        <div class="mini-layout" style="padding: 15px;">
+            <div id="grid"></div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $(".tab-4").addClass("active");
+            $(".mini-layout.scroll-page").css("height", window.innerHeight - ($("nav.navbar").innerHeight() + 24))
+        })
+    </script>
+}
